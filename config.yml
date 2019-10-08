@@ -1,0 +1,64 @@
+LojaSquare:
+  Key_API: "lojasquare-key-api"
+  Connection_Timeout: 1500
+  Read_Timeout: 3000
+
+Config:
+  HTTPS: true
+  Tempo_Checar_Compras_Apos_Login: 10
+
+Grupos:
+  #Nao mude o nome deste grupo. Se o player abrir uma disputa com voce, o LojaSquare usara este grupo para aplicar uma punicao.
+  DISPUTA:
+    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
+    # @player = Player que comprou
+    # @qnt    = quantidade que foi adquirida pelo player
+    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
+    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
+    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    Money: false
+    Cmds_A_Executar:
+      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
+      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
+      - 'ban @player &cEncerre o pedido de disputa e voce sera desbanido!'
+  #Nao mude o nome deste grupo. Se o player encerrar a disputa a seu favor, o LojaSquare usara este grupo para remover a punicao.
+  RESOLVIDO:
+    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
+    # @player = Player que comprou
+    # @qnt    = quantidade que foi adquirida pelo player
+    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
+    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
+    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    Money: false
+    Cmds_A_Executar:
+      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
+      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
+      - 'desban @player'
+  #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
+  VIPFerro:
+    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
+    # @player = Player que comprou
+    # @qnt    = quantidade que foi adquirida pelo player
+    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
+    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
+    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    Money: false
+    Cmds_A_Executar:
+      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
+      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
+      - 'gerarvip @grupo @dias @qnt @player'
+  #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
+  Cash10:
+    # Se a quantidade de produtos que o player tiver compro for igual a 1, ele ira ganhar 10 cash.
+    # Se a quantidade de produtos que o player tiver compro for igual a 4, ele ira ganhar 10x5 cash = 50 cash
+    Quantidade_De_Money: 10
+    # Se este grupo de item DER Money para o player (CASH/almas tambem sao tipos de money money), deixe como true
+    Money: true
+    Cmds_A_Executar:
+      # Neste exemplo o console executara o comando para dar a quantidade de money adquirida ao player.
+      # Se o player tiver adquirido 2 quantidades do grupo Cash10, ele recebera 10x2 = 20 cashs.
+      # Ou seja, a variavel @money sera igual a 20.
+      - 'money give @player @money'
+
+Msg:
+  Produto_Nao_Configurado: "&4[LojaSquare] &cVoce tem um produto para ser entregue, porem, o grupo do produto nao esta configurado. Grupo: &a@grupo"

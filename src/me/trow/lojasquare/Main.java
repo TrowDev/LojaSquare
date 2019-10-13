@@ -88,13 +88,17 @@ public class Main extends JavaPlugin{
 					ultimaChecagem.put(p.getName(), System.currentTimeMillis()/1000);
 					List<ItemInfo> itens = getLojaSquare().getEntregasPlayer(p.getName());
 					if(itens!=null&&itens.size()>0){
-						for(ItemInfo item:itens){
+						for(final ItemInfo item:itens){
 							if(!produtoConfigurado(item.getGrupo())){
 								p.sendMessage(getMsg("Msg.Produto_Nao_Configurado").replace("@grupo", item.getGrupo()));
 								continue;
 							}
-							ProductPreActiveEvent pae = new ProductPreActiveEvent(p, item);
-							Bukkit.getPluginManager().callEvent(pae);
+							new BukkitRunnable() {
+								public void run() {
+									ProductPreActiveEvent pae = new ProductPreActiveEvent(p, item);
+									Bukkit.getPluginManager().callEvent(pae);
+								}
+							}.runTask(pl);
 						}
 					}
 				}

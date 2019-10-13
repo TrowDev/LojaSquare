@@ -42,6 +42,12 @@ Grupos:
     # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
     # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
     # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    Enviar_Mensagem: false
+    Mensagem_Receber_Ao_Ativar_Produto:
+      - '&eOla, &a@player'
+      - '&eO produto que voce adquiriu (&a@produto) foi ativado!'
+      - '&eDias: &a@dias'
+      - '&eQuantidade: &a@qnt'
     Money: false
     Cmds_A_Executar:
       # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
@@ -49,6 +55,14 @@ Grupos:
       - 'gerarvip @grupo @dias @qnt @player'
   #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
   Cash10:
+    # Quando o produto for entregue devera mandar uma mensagem ao player que o recebeu?!
+    Enviar_Mensagem: false
+    # Mensagem que o player que recebeu o produto ira receber tambem.
+    Mensagem_Receber_Ao_Ativar_Produto:
+      - '&eOla, &a@player'
+      - '&eO produto que voce adquiriu (&a@produto) foi ativado!'
+      - '&eDias: &a@dias'
+      - '&eQuantidade: &a@qnt'
     # Se a quantidade de produtos que o player tiver compro for igual a 1, ele ira ganhar 10 cash.
     # Se a quantidade de produtos que o player tiver compro for igual a 4, ele ira ganhar 10x5 cash = 50 cash
     Quantidade_De_Money: 10

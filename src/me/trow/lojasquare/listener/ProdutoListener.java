@@ -6,6 +6,7 @@ import me.trow.lojasquare.api.ProductPreActiveEvent;
 import me.trow.lojasquare.utils.ItemInfo;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -46,6 +47,20 @@ public class ProdutoListener implements Listener{
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 		}
 		pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");
+	}
+	
+	@EventHandler
+	public void sendMsgToPlayerOnActiveProducts(ProductActiveEvent e){
+		ItemInfo ii = e.getItemInfo();
+		if(pl.getConfig().getBoolean("Grupos."+ii.getGrupo()+".Enviar_Mensagem",false)){
+			Player p = e.getPlayer();
+			for(String s:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Mensagem_Receber_Ao_Ativar_Produto")){
+				s=s.replace("&", "§");
+				s=s.replace("@grupo", ii.getGrupo()).replace("@produto", ii.getProduto()).replace("@dias", ii.getDias()+"");
+				s=s.replace("@qnt", ii.getQuantidade()+"").replace("@player", p.getName());
+				p.sendMessage(s);
+			}
+		}
 	}
 	
 }

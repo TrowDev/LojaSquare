@@ -9,22 +9,31 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ProdutoListener implements Listener{
 	
 	private static Main pl = Main.getInstance();
 	
 	@EventHandler
-	public void preActive(ProductPreActiveEvent e){
+	public void preActive(final ProductPreActiveEvent e){
 		if(e.isCancelled()) return;
-		ItemInfo ii = e.getItemInfo();
-		if(pl.getLojaSquare().updateDelivery(ii)){
-			pl.print("§6[LojaSquare] §ePreparando entrega do produto do compra: §7"+ii.toString());
-			ProductActiveEvent pae = new ProductActiveEvent(e.getPlayer(), ii);
-			Bukkit.getPluginManager().callEvent(pae);
-		}else{
-			pl.print("§4[LojaSquare] §cNao foi possivel atualizar o status da compra: §a"+ii.toString()+"§c para: 'Entregue'. Portanto, a entrega nao foi feita!");
-		}
+		new BukkitRunnable() {
+			public void run() {
+				final ItemInfo ii = e.getItemInfo();
+				if(pl.getLojaSquare().updateDelivery(ii)){
+					pl.print("§6[LojaSquare] §ePreparando entrega do produto do compra: §7"+ii.toString());
+					new BukkitRunnable() {
+						public void run() {
+							ProductActiveEvent pae = new ProductActiveEvent(e.getPlayer(), ii);
+							Bukkit.getPluginManager().callEvent(pae);
+						}
+					}.runTask(pl);
+				}else{
+					pl.print("§4[LojaSquare] §cNao foi possivel atualizar o status da compra: §a"+ii.toString()+"§c para: 'Entregue'. Portanto, a entrega nao foi feita!");
+				}
+			}
+		}.runTaskAsynchronously(pl);
 	}
 	
 	@EventHandler

@@ -20,10 +20,11 @@ public class LojaSquare {
 	/*public static void main(String[] args) {
 		LojaSquare ls = new LojaSquare();
 		ls.setCredencial("wCkyUEK5CCVtaIaMy6iqhRphvqiyoh");
-		List<ItemInfo> li = ls.getEntregasPlayer("Trow_Games");
+		List<ItemInfo> li = ls.getTodasEntregas();//getEntregasPlayer("Trow_Games");
 		if(li.size()>0){
 			for(ItemInfo ii:li){
-				ls.updateDelivery(ii);
+				print(ii.toString());
+				//ls.updateDelivery(ii);
 			}
 		}else{
 			print("Nada para entregar ao player Trow_Games.");
@@ -66,6 +67,26 @@ public class LojaSquare {
 	public boolean updateDelivery(ItemInfo ii){
 		if(ii==null) return false;
 		return update(String.format("/v1/queue/%s/%d", ii.getPlayer(),ii.getIDEntrega()));
+	}
+	
+	public List<ItemInfo> getTodasEntregas(){
+		String player = "*";
+		List<ItemInfo> itens = new ArrayList<>();
+		try{
+			String result = get(String.format("/v1/queue/%s", player));
+			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
+			for(int i=1;i<=job.entrySet().size();i++){
+				try{
+					ItemInfo ii = new Gson().fromJson(job.getAsJsonObject(i+""), ItemInfo.class);
+					itens.add(ii);
+				}catch (Exception e){
+					print("[LojaSquare] Nao foi possivel processar o item "+job.getAsJsonObject(i+"").toString()+". Erro: "+e.getMessage());
+				}
+			}
+			return itens;
+		}catch (Exception e){
+			return itens;
+		}
 	}
 	
 	public List<ItemInfo> getEntregasPlayer(String player){

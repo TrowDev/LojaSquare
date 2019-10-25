@@ -2,7 +2,7 @@ package me.trow.lojasquare.utils;
 
 public class ItemInfo {
 	
-	private String player,produto,servidor,grupo,codigo,status;
+	private String player,produto,servidor,subServidor,grupo,codigo,status;
 	private int statusID,dias,idEntrega,quantidade;
 	private long atualizadoEm;
 	
@@ -19,7 +19,7 @@ public class ItemInfo {
 	}
 	
 	public String toString(){
-		String a = "ItemInfo={player:"+player+",produto:"+produto+",servidor:"+servidor+",grupo:"+grupo+",codigo:"+codigo+",status:"+status
+		String a = "ItemInfo={player:"+player+",produto:"+produto+",servidor:"+servidor+",subServidor:"+subServidor+",grupo:"+grupo+",codigo:"+codigo+",status:"+status
 				+",statusID:"+statusID+",dias:"+dias+",idEntrega:"+idEntrega+",quantidade:"+quantidade+",lastUpdate:"+atualizadoEm+"}";
 		return a;
 	}
@@ -30,6 +30,10 @@ public class ItemInfo {
 	
 	public void setPlayer(String s){
 		player=s;
+	}
+	
+	public String getSubServidor(){
+		return subServidor;
 	}
 	
 	public String getProduto(){

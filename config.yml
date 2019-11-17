@@ -1,4 +1,5 @@
 LojaSquare:
+  Debug: true
   Key_API: "lojasquare-key-api"
   Servidor: "Nome-Do-Servidor"
   Connection_Timeout: 1500

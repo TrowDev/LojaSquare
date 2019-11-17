@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.bukkit.Bukkit;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,10 +36,12 @@ public class LojaSquare {
 	private int connectionTimeout;
 	private int readTimeout;
 	private String credencial;
+	private boolean debug;
 	
 	public LojaSquare(){
 		connectionTimeout=1500;
 		readTimeout=3000;
+		debug=false;
 	}
 	
 	public String getCredencial(){
@@ -54,6 +58,14 @@ public class LojaSquare {
 	
 	public void setReadTimeout(int milisec){
 		readTimeout=milisec;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public boolean canDebug() {
+		return debug;
 	}
 	
 	public int getConnectionTimeout(){
@@ -138,14 +150,22 @@ public class LojaSquare {
 				return sb.toString();
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null,ex);
+			if(canDebug()){
+				ex.printStackTrace();
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null,ex);
+			}else{
+				msgConsole("§4[LojaSquare] §cErro ao tentar conexao com o site. Erro: §a"+ex.getMessage());
+			}
 			if (c != null) {
 				try {
 					c.disconnect();
 				} catch (Exception ex2) {
-					ex2.printStackTrace();
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex2);
+					if(canDebug()){
+						ex2.printStackTrace();
+						Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex2);
+					}else{
+						msgConsole("§4[LojaSquare] §cErro ao fechar a conexao com o site. Erro: §a"+ex2.getMessage());
+					}
 				}
 			}
 		} finally {
@@ -153,8 +173,12 @@ public class LojaSquare {
 				try {
 					c.disconnect();
 				} catch (Exception ex3) {
-					ex3.printStackTrace();
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex3);
+					if(canDebug()){
+						ex3.printStackTrace();
+						Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex3);
+					}else{
+						msgConsole("§4[LojaSquare] §cErro ao fechar a conexao com o site. Erro: §a"+ex3.getMessage());
+					}
 				}
 			}
 		}
@@ -183,13 +207,23 @@ public class LojaSquare {
 			if (statusCode == 200 || statusCode == 201 || statusCode == 204) {
 				return true;
 			}
-		} catch (IOException ex) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null,ex);
+		}  catch (IOException ex) {
+			if(canDebug()){
+				ex.printStackTrace();
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null,ex);
+			}else{
+				msgConsole("§4[LojaSquare] §cErro ao tentar conexao com o site. Erro: §a"+ex.getMessage());
+			}
 			if (c != null) {
 				try {
 					c.disconnect();
 				} catch (Exception ex2) {
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex2);
+					if(canDebug()){
+						ex2.printStackTrace();
+						Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex2);
+					}else{
+						msgConsole("§4[LojaSquare] §cErro ao fechar a conexao com o site. Erro: §a"+ex2.getMessage());
+					}
 				}
 			}
 		} finally {
@@ -197,7 +231,12 @@ public class LojaSquare {
 				try {
 					c.disconnect();
 				} catch (Exception ex3) {
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex3);
+					if(canDebug()){
+						ex3.printStackTrace();
+						Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex3);
+					}else{
+						msgConsole("§4[LojaSquare] §cErro ao fechar a conexao com o site. Erro: §a"+ex3.getMessage());
+					}
 				}
 			}
 		}
@@ -238,6 +277,10 @@ public class LojaSquare {
 
 	public static void print(double a) {
 		System.out.println(a);
+	}
+	
+	public void msgConsole(String s){
+		Bukkit.getConsoleSender().sendMessage(s);
 	}
 
 }

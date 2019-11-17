@@ -21,6 +21,7 @@ public class Main extends JavaPlugin{
 	private static List<String> produtosConfigurados = new ArrayList<>();
 	private static LojaSquare ls;
 	private static String servidor;
+	private static boolean debug;
 	
 	public void onEnable() {
 		ConsoleCommandSender b = Bukkit.getConsoleSender();
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin{
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 			pl=this;
 			saveDefaultConfig();
+			debug = getConfig().getBoolean("LojaSquare.Debug",true);
 			servidor = getConfig().getString("LojaSquare.Servidor",null);
 			if(!checarServidorConfigurado(b)) return;
 			ls = new LojaSquare();
@@ -48,6 +50,7 @@ public class Main extends JavaPlugin{
 			ls.setCredencial(getKeyAPI());
 			ls.setConnectionTimeout(getConfig().getInt("LojaSquare.Connection_Timeout",1500));
 			ls.setReadTimeout(getConfig().getInt("LojaSquare.Read_Timeout",3000));
+			ls.setDebug(debug);
 			b.sendMessage("§3[LojaSquare] §bVariaveis definidas com sucesso!");
 			// FIM definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
@@ -86,10 +89,13 @@ public class Main extends JavaPlugin{
 		new BukkitRunnable() {
 			public void run() {
 				List<ItemInfo> itens = getLojaSquare().getTodasEntregas();
+				printDebug("§3[LojaSquare] §bItens Size: §a"+itens.size());
 				if(itens!=null&&itens.size()>0){
 					for(final ItemInfo item:itens){
-						if(!item.getServidor().equalsIgnoreCase(servidor)) continue;
+						printDebug("§3[LojaSquare] §bItem: §a"+item.toString()+" §b// subServer: §a"+item.getSubServidor()+" // Servidor: §d"+servidor);
+						if(!item.getSubServidor().equalsIgnoreCase(servidor)) continue;
 						final Player p = Bukkit.getPlayer(item.getPlayer());
+						printDebug("§3[LojaSquare] §bPlayer: §a"+item.getPlayer()+"b // P NULL? §a"+(p==null));
 						if(p==null&&!getConfig().getBoolean("Grupos."+item.getGrupo()+".Ativar_Com_Player_Offline",false)){
 							boolean b = item.getProduto().equalsIgnoreCase("DISPUTA")&&item.getGrupo().equalsIgnoreCase("DISPUTA");
 							boolean b1 = item.getProduto().equalsIgnoreCase("RESOLVIDO")&&item.getGrupo().equalsIgnoreCase("RESOLVIDO");
@@ -109,6 +115,12 @@ public class Main extends JavaPlugin{
 				}
 			}
 		}.runTaskTimerAsynchronously(pl, 20*10, 20*getTempoChecarItens());
+	}
+	
+	public static void printDebug(String s){
+		if(debug){
+			Bukkit.broadcastMessage(s);
+		}
 	}
 	
 	public int getTempoChecarItens(){

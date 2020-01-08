@@ -76,11 +76,20 @@ public class LojaSquare {
 		return readTimeout;
 	}
 	
+	/**
+	 * O metodo executa o update da entrega, informando na api que a entrega com ID 'x' foi realizada.
+	 * @param ItemInfo
+	 * @return Retornara true se o update da entrega for realizado com sucesso.
+	 */
 	public boolean updateDelivery(ItemInfo ii){
 		if(ii==null) return false;
 		return update(String.format("/v1/queue/%s/%d", ii.getPlayer(),ii.getIDEntrega()));
 	}
 	
+	/**
+	 * Retorna uma lista de produtos a serem entregues (Retorno para todos os players).
+	 * @return List<ItemInfo> lista de produtos a serem entregues.
+	 */
 	public List<ItemInfo> getTodasEntregas(){
 		String player = "*";
 		List<ItemInfo> itens = new ArrayList<>();
@@ -101,6 +110,11 @@ public class LojaSquare {
 		}
 	}
 	
+	/**
+	 * Retorna uma lista de produtos a serem entregues para um player em especifico.
+	 * @param player - Nick do player, usado como referencia para filtrar as entregas.
+	 * @return List<ItemInfo> lista de produtos a serem entregues.
+	 */
 	public List<ItemInfo> getEntregasPlayer(String player){
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
@@ -120,6 +134,11 @@ public class LojaSquare {
 		}
 	}
 	
+	/**
+	 * Este metodo faz a requisicao na api, na requisicao do endpoint.
+	 * @param endpoint - Caminho onde a chamada deve ser realizada.
+	 * @return Retorna o JSON, caso tenha produtos a serem retornados.
+	 */
 	public String get(final String endpoint){
 		HttpsURLConnection c = null;
 		int statusCode = 0;
@@ -185,6 +204,11 @@ public class LojaSquare {
 		return getResponseByCode(statusCode);
 	}
 
+	/**
+	 * Este metodo faz a requisicao de update na api.
+	 * @param endpoint - Caminho onde a requisicao deve ser realizada.
+	 * @return Retorna true, caso o update seja realizado com sucesso.
+	 */
 	public boolean update(final String endpoint){
 		HttpsURLConnection c = null;
 		int statusCode = 0;

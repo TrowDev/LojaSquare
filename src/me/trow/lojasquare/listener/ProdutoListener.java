@@ -49,10 +49,11 @@ public class ProdutoListener implements Listener{
 		if(isMoney){
 			qntMoney = pl.getConfig().getDouble("Grupos."+ii.getGrupo()+".Quantidade_De_Money")*ii.getQuantidade();
 		}
+		int qntMoneyInteiro = (int)qntMoney;
 		for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
 			cmds=cmds.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
 			cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
-			cmds=cmds.replace("@qnt", ii.getQuantidade()+"");
+			cmds=cmds.replace("@qnt", ii.getQuantidade()+"").replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"");
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 		}
 		pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");

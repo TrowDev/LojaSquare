@@ -1,5 +1,8 @@
 LojaSquare:
   Debug: true
+  # Para saber o que deve ser inserido em Key_API e em Servidor, acesse este tutorial:
+  # https://painel.lojasquare.com.br/faq/ver?id=9
+  # (E necessario fazer login para ver o tutorial)
   Key_API: "lojasquare-key-api"
   Servidor: "Nome-Do-Servidor"
   Connection_Timeout: 1500
@@ -11,6 +14,7 @@ Config:
   Tempo_Checar_Compras: 60
 
 Grupos:
+  # Com relacao a configuracao de DISPUTA e RESOLVIDO, veja o tutorial: https://painel.lojasquare.com.br/faq/ver?id=10
   #Nao mude o nome deste grupo. Se o player abrir uma disputa com voce, o LojaSquare usara este grupo para aplicar uma punicao.
   DISPUTA:
     #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
@@ -37,6 +41,7 @@ Grupos:
       # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
       # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
       - 'desban @player'
+  # Para configurar os outros produtos, veja o tutorial: https://painel.lojasquare.com.br/faq/ver?id=15
   #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
   VIPFerro:
     #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
@@ -58,7 +63,7 @@ Grupos:
       # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
       - 'gerarvip @grupo @dias @qnt @player'
   #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
-  Cash10:
+  Cash500:
     # Quando o produto for entregue devera mandar uma mensagem ao player que o recebeu?!
     Enviar_Mensagem: false
     # Mensagem que o player que recebeu o produto ira receber tambem.
@@ -76,7 +81,9 @@ Grupos:
     Cmds_A_Executar:
       # Neste exemplo o console executara o comando para dar a quantidade de money adquirida ao player.
       # Se o player tiver adquirido 2 quantidades do grupo Cash10, ele recebera 10x2 = 20 cashs.
-      # Ou seja, a variavel @money sera igual a 20.
+      # Ou seja, a variavel @money sera igual a 20.00
+      # Se voce usar algum plugin que nao aceita valores quebrados (Exemplo: 1.05), utilize esta variavel: @moneyInteiro
+      # Ao utilizar @moneyInteiro, voce deixara de receber como valor 20.00 e recebera 20 apenas.
       - 'money give @player @money'
 
 Msg:

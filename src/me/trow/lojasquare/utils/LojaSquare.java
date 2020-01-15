@@ -268,23 +268,21 @@ public class LojaSquare {
 		return false;
 	}
 	
-	public static String getResponseByCode(int i){
+	public String getResponseByCode(int i){
 		if(i==0){
-			return "[LojaSquare] Servidor sem conexao com a internet.";
+			return "[LojaSquare] §cServidor sem conexao com a internet.";
+		}else if(i==401){
+			return "[LojaSquare] §cConexao nao autorizada! Por favor, confira se a sua credencial esta correta.";
+		}else if(i==403){
+			return "[LojaSquare] §cO IP enviado e diferente do que temos em nosso Banco de Dados. IP da sua Maquina: §a"+get("/v1/autenticar/ip");
+		}else if(i==404){
+			return "[LojaSquare] §cNao foi encontrado nenhum registro para a requisicao efetuada.";
+		}else if(i==405){
+			return "[LojaSquare] §cErro ao autenticar sua loja! Verifique se sua assinatura e credencial estao ativas!";
+		}else if(i==406){
+			return "[LojaSquare] §cNao foi executada nenhuma atualizacao referente ao requerimento efetuado.";
 		}
-		if(i==401){
-			return "[LojaSquare] Conexao nao autorizada! Por favor, confira se a sua credencial esta correta.";
-		}
-		if(i==404){
-			return "[LojaSquare] Nao foi encontrado nenhum registro para a requisicao efetuada.";
-		}
-		if(i==405){
-			return "[LojaSquare] Erro ao autenticar sua loja! Verifique se sua assinatura e credencial estao ativas!";
-		}
-		if(i==406){
-			return "[LojaSquare] Nao foi executada nenhuma atualizacao referente ao requerimento efetuado.";
-		}
-		return "[LojaSquare] Provavel falha causada por entrada de dados incompativeis com o requerimento efetuado. Status Code: "+i;
+		return "[LojaSquare] §cProvavel falha causada por entrada de dados incompativeis com o requerimento efetuado. Status Code: "+i;
 	}
 
 	public static int parseInt(String a) {

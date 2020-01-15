@@ -63,7 +63,7 @@ Grupos:
       # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
       - 'gerarvip @grupo @dias @qnt @player'
   #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
-  Cash500:
+  Cash10:
     # Quando o produto for entregue devera mandar uma mensagem ao player que o recebeu?!
     Enviar_Mensagem: false
     # Mensagem que o player que recebeu o produto ira receber tambem.

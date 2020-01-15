@@ -1,6 +1,8 @@
 package me.trow.lojasquare;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import me.trow.lojasquare.api.ProductPreActiveEvent;
@@ -29,6 +31,8 @@ public class Main extends JavaPlugin{
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 			pl=this;
 			saveDefaultConfig();
+			String keyapi = getKeyAPI();
+			if(!checarIPCorreto(b, keyapi)) return;
 			debug = getConfig().getBoolean("LojaSquare.Debug",true);
 			servidor = getConfig().getString("LojaSquare.Servidor",null);
 			if(!checarServidorConfigurado(b)) return;
@@ -47,15 +51,15 @@ public class Main extends JavaPlugin{
 			tempoChecarItens = getConfig().getInt("Config.Tempo_Checar_Compras",60);
 			// INICIO definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bDefinindo variaveis de conexao com o site §dLojaSquare§b...");
-			ls.setCredencial(getKeyAPI());
+			ls.setCredencial(keyapi);
 			ls.setConnectionTimeout(getConfig().getInt("LojaSquare.Connection_Timeout",1500));
 			ls.setReadTimeout(getConfig().getInt("LojaSquare.Read_Timeout",3000));
 			ls.setDebug(debug);
 			b.sendMessage("§3[LojaSquare] §bVariaveis definidas com sucesso!");
 			// FIM definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
-			checarEntregas();
 			Bukkit.getPluginManager().registerEvents(new ProdutoListener(), this);
+			checarEntregas();
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 		}catch (Exception e){
 			b.sendMessage("§4[LojaSquare] §cErro ao iniciar o plugin LojaSquare.");
@@ -71,6 +75,22 @@ public class Main extends JavaPlugin{
 		b.sendMessage("§3Criador: §bTrow");
 		b.sendMessage("§bAgradeco por usar meu(s) plugin(s)");
 		b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+	}
+	
+	public boolean checarIPCorreto(ConsoleCommandSender b,String nome){
+		String result = getLojaSquare().get("/v1/autenticar");
+		boolean bo = result.contains("true");
+		if (!bo) {
+			b.sendMessage("§3[LojaSquare] §cDesativado...");
+			b.sendMessage("§3Criador: §3Trow");
+			b.sendMessage("§cMotivo: " + result);
+			b.sendMessage("§3Key-API: §a"+nome);
+			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return false;
+		}
+		b.sendMessage("§3[LojaSquare] §bIP da maquina configurado!");
+		return true;
 	}
 	
 	public boolean checarServidorConfigurado(ConsoleCommandSender b){
@@ -89,24 +109,27 @@ public class Main extends JavaPlugin{
 		new BukkitRunnable() {
 			public void run() {
 				List<ItemInfo> itens = getLojaSquare().getTodasEntregas();
+				printDebug("");
 				printDebug("§3[LojaSquare] §bItens Size: §a"+itens.size());
 				if(itens!=null&&itens.size()>0){
 					for(final ItemInfo item:itens){
 						printDebug("§3[LojaSquare] §bItem: §a"+item.toString()+" §b// subServer: §a"+item.getSubServidor()+" // Servidor: §d"+servidor);
 						if(!item.getSubServidor().equalsIgnoreCase(servidor)) continue;
 						final Player p = Bukkit.getPlayer(item.getPlayer());
-						printDebug("§3[LojaSquare] §bPlayer: §a"+item.getPlayer()+"b // P NULL? §a"+(p==null));
+						printDebug("§3[LojaSquare] §bPlayer: §a"+item.getPlayer()+"§b // P NULL? §a"+(p==null));
 						if(p==null&&!getConfig().getBoolean("Grupos."+item.getGrupo()+".Ativar_Com_Player_Offline",false)){
 							boolean b = item.getProduto().equalsIgnoreCase("DISPUTA")&&item.getGrupo().equalsIgnoreCase("DISPUTA");
 							boolean b1 = item.getProduto().equalsIgnoreCase("RESOLVIDO")&&item.getGrupo().equalsIgnoreCase("RESOLVIDO");
 							if(!b&&!b1) continue;
 						}
 						if(!produtoConfigurado(item.getGrupo())&&p!=null){
+							printDebug("§3[LojaSquare] §bProduto §a"+item.getGrupo()+"§b nao configurado!");
 							p.sendMessage(getMsg("Msg.Produto_Nao_Configurado").replace("@grupo", item.getGrupo()));
 							continue;
 						}
 						new BukkitRunnable() {
 							public void run() {
+								printDebug("§3[LojaSquare] §bPre Product Active Event");
 								ProductPreActiveEvent pae = new ProductPreActiveEvent(p==null?null:p, item);
 								Bukkit.getPluginManager().callEvent(pae);
 							}
@@ -119,8 +142,28 @@ public class Main extends JavaPlugin{
 	
 	public static void printDebug(String s){
 		if(debug){
-			Bukkit.broadcastMessage(s);
+			for(Player p:getOnlinePlayers()){
+				if(p.isOp()||p.hasPermission("lojasquare.debug")){
+					p.sendMessage(s);
+				}
+			}
 		}
+	}
+	
+	public static Player[] getOnlinePlayers() {
+		try {
+			Method method = Bukkit.class.getDeclaredMethod("getOnlinePlayers");
+			Object players = method.invoke(null);
+			if (players instanceof Player[]) {
+				return (Player[]) players;
+			} else {
+				Collection<?> c = ((Collection<?>) players);
+				return c.toArray(new Player[c.size()]);
+			}
+
+		} catch (Exception e) {
+		}
+		return null;
 	}
 	
 	public int getTempoChecarItens(){

@@ -17,9 +17,11 @@ public class ProdutoListener implements Listener{
 	
 	@EventHandler
 	public void preActive(final ProductPreActiveEvent e){
+		pl.printDebug("§3[LojaSquare] §bpreActive");
 		if(e.isCancelled()) return;
 		new BukkitRunnable() {
 			public void run() {
+				pl.printDebug("§3[LojaSquare] §bAntes update delivery.");
 				final ItemInfo ii = e.getItemInfo();
 				if(pl.getLojaSquare().updateDelivery(ii)){
 					pl.print("§6[LojaSquare] §ePreparando entrega do produto do compra: §7"+ii.toString());
@@ -57,6 +59,7 @@ public class ProdutoListener implements Listener{
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 		}
 		pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");
+		pl.printDebug("");
 	}
 	
 	@EventHandler

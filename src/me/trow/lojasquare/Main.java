@@ -32,11 +32,11 @@ public class Main extends JavaPlugin{
 			pl=this;
 			saveDefaultConfig();
 			String keyapi = getKeyAPI();
+			ls = new LojaSquare();
 			if(!checarIPCorreto(b, keyapi)) return;
 			debug = getConfig().getBoolean("LojaSquare.Debug",true);
 			servidor = getConfig().getString("LojaSquare.Servidor",null);
 			if(!checarServidorConfigurado(b)) return;
-			ls = new LojaSquare();
 			b.sendMessage("§3[LojaSquare] §bAtivado...");
 			b.sendMessage("§3Criador: §bTrow");
 			b.sendMessage("§bDesejo a voce uma otima experiencia com o §dLojaSquare§b.");
@@ -62,6 +62,7 @@ public class Main extends JavaPlugin{
 			checarEntregas();
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 		}catch (Exception e){
+			e.printStackTrace();
 			b.sendMessage("§4[LojaSquare] §cErro ao iniciar o plugin LojaSquare.");
 			b.sendMessage("§4[LojaSquare] §cErro: §a"+e.getMessage());
 			Bukkit.getPluginManager().disablePlugin(this);

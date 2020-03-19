@@ -101,7 +101,7 @@ https://api.lojasquare.com.br//v1/queue/*
 **GET - Lista de SubServidores**
 - Endpoint: **subservidores**
 - Obtem a lista de categorias da loja
-- URI: **https://api.lojasquare.com.br//v1/categorias**
+- URI: **https://api.lojasquare.com.br//v1/subservidores**
 <hr>
 
 **PUT - Validar Cupom X**

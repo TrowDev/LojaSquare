@@ -111,3 +111,18 @@ https://api.lojasquare.com.br//v1/queue/*
 - Obtem as informações do cupom se o cupom for validado.
 - URI: **https://api.lojasquare.com.br//v1/cupom/(CUPOM)/(GRUPO-DO-PRODUTO)**
 <hr>
+
+**POST - Checkout de compra - DIFERENCIADO**
+- URI: **https://www.lojasquare.com.br/gateways/checkout.php**
+- Parâmetros necessários:
+° Inputs do tipo "hidden":
+  - name="servidor"               | value: "Nome do Servidor"
+  - name="id"                     | value: "ID do produto"
+  - name="qnt"                    | value: "Quantidade adquirida"
+  - name="player"                 | value: "Nick do player"
+  - name="gateway"                | value: "Gateway escolhido"
+    **OBS: Gateways válidos: "MercadoPago", "PayPal", "PagSeguro"**
+  - name="cupomON"                | value: "Cupom utilizado"
+    **OBS: Se o player não usar nenhum cupom, não precisa criar o input "cupomON".**
+<hr>
+

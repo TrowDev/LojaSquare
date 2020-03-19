@@ -54,7 +54,7 @@ Para obter a lista de ordens de entrega de **TODOS** os players de uma única ve
 Exemplo:
 https://api.lojasquare.com.br//v1/queue/*
 
-**Atualizar o status de uma ordem para Entregue:**
+**PUT - Atualizar o status de uma ordem para Entregue:**
 - Endpoint: **queue/(player)/(ID de Entrega)**
 - Atualiza o status de uma entrega para Entregue.
 <hr>
@@ -112,7 +112,7 @@ https://api.lojasquare.com.br//v1/queue/*
 - URI: **https://api.lojasquare.com.br//v1/cupom/(CUPOM)/(GRUPO-DO-PRODUTO)**
 <hr>
 
-**POST - Checkout de compra - DIFERENCIADO**
+**POST - Checkout de compra - DIFERENCIADO, USAR EM FORMULÁRIO**
 - URI: **https://www.lojasquare.com.br/gateways/checkout.php**
 - Parâmetros necessários:
 ° Inputs do tipo "hidden":

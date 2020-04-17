@@ -19,8 +19,20 @@ public class ItemInfo {
 	}
 	
 	public String toString(){
-		String a = "ItemInfo={player:"+player+",produto:"+produto+",servidor:"+servidor+",subServidor:"+subServidor+",grupo:"+grupo+",codigo:"+codigo+",status:"+status
-				+",statusID:"+statusID+",dias:"+dias+",idEntrega:"+idEntrega+",quantidade:"+quantidade+",lastUpdate:"+atualizadoEm+"}";
+		String a = "ItemInfo={"
+					+ "player:"+player+","
+					+ "produto:"+produto+","
+					+ "servidor:"+servidor+","
+					+ "subServidor:"+subServidor+","
+					+ "grupo:"+grupo+","
+					+ "codigo:"+codigo+","
+					+ "status:"+status
+					+",statusID:"+statusID+","
+					+ "dias:"+dias+","
+					+ "idEntrega:"+idEntrega+","
+					+ "quantidade:"+quantidade+","
+					+ "lastUpdate:"+atualizadoEm
+				+"}";
 		return a;
 	}
 	

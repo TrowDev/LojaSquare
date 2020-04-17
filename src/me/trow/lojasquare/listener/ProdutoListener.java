@@ -39,27 +39,69 @@ public class ProdutoListener implements Listener{
 	}
 	
 	@EventHandler
-	public void active(ProductActiveEvent e){
+	public void activeSmartDelivery(ProductActiveEvent e){
 		ItemInfo ii = e.getItemInfo();
 		if(e.isCancelled()){
 			pl.print("§4[LojaSquare] §cAtivacao da compra: §a"+ii.toString()+"§c foi cancelada por meio do evento §aProductActiveEvent§c"
 					+ ", mas ja foi marcado no site com status 'Entregue'.");
 			return;
 		}
-		boolean isMoney = pl.getConfig().getBoolean("Grupos."+ii.getGrupo()+".Money");
-		double qntMoney = 0;
-		if(isMoney){
-			qntMoney = pl.getConfig().getDouble("Grupos."+ii.getGrupo()+".Quantidade_De_Money")*ii.getQuantidade();
+		if(pl.doSmartDelivery()){
+			boolean isMoney = pl.getConfig().getBoolean("Grupos."+ii.getGrupo()+".Money");
+			double qntMoney = 0;
+			if(isMoney){
+				qntMoney = pl.getConfig().getDouble("Grupos."+ii.getGrupo()+".Quantidade_De_Money")*ii.getQuantidade();
+			}
+			int qntMoneyInteiro = (int)qntMoney;
+			for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
+				try {
+					cmds=cmds.replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"")
+							.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
+					cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
+					cmds=cmds.replace("@qnt", ii.getQuantidade()+"");
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
+				} catch (Exception e2) {
+					pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
+					// TODO: handle exception
+				}
+			}
+			pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");
+			pl.printDebug("");
 		}
-		int qntMoneyInteiro = (int)qntMoney;
-		for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
-			cmds=cmds.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
-			cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
-			cmds=cmds.replace("@qnt", ii.getQuantidade()+"").replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"");
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
+	}
+	
+	@EventHandler
+	public void activeNoSmartDelivery(ProductActiveEvent e){
+		ItemInfo ii = e.getItemInfo();
+		if(e.isCancelled()){
+			pl.print("§4[LojaSquare] §cAtivacao da compra: §a"+ii.toString()+"§c foi cancelada por meio do evento §aProductActiveEvent§c"
+					+ ", mas ja foi marcado no site com status 'Entregue'.");
+			return;
 		}
-		pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");
-		pl.printDebug("");
+		if(!pl.doSmartDelivery()){
+			boolean isMoney = pl.getConfig().getBoolean("Grupos."+ii.getGrupo()+".Money");
+			double qntMoney = 0;
+			if(isMoney){
+				qntMoney = pl.getConfig().getDouble("Grupos."+ii.getGrupo()+".Quantidade_De_Money");
+			}
+			int qntMoneyInteiro = (int)qntMoney;
+			for(int i=1;i<=ii.getQuantidade();i++){
+				for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
+					try {
+						cmds=cmds.replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"")
+								.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
+						cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
+						cmds=cmds.replace("@qnt", i+"");
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
+					} catch (Exception e2) {
+						pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
+						// TODO: handle exception
+					}
+				}
+				pl.print("§3[LojaSquare] §bEntrega do produto §a"+ii.toString()+"§b concluida com sucesso!");
+				pl.printDebug("");
+			}
+		}
 	}
 	
 	@EventHandler

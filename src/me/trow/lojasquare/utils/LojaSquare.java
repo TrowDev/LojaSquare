@@ -19,9 +19,9 @@ import com.google.gson.JsonParser;
 
 public class LojaSquare {
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		LojaSquare ls = new LojaSquare();
-		ls.setCredencial("wCkyUEK5CCVtaIaMy6iqhRphvqiyoh");
+		ls.setCredencial("A6FRZEDm8m4DHQ71ruzeuKFLXGzkgn");
 		List<ItemInfo> li = ls.getTodasEntregas();//getEntregasPlayer("Trow_Games");
 		if(li.size()>0){
 			for(ItemInfo ii:li){
@@ -31,7 +31,7 @@ public class LojaSquare {
 		}else{
 			print("Nada para entregar ao player Trow_Games.");
 		}
-	}*/
+	}// */
 	
 	private int connectionTimeout;
 	private int readTimeout;
@@ -157,6 +157,7 @@ public class LojaSquare {
 			c.setReadTimeout(getReadTimeout());
 			c.connect();
 			statusCode = c.getResponseCode();
+			print("Status Code From "+endpoint+" : "+statusCode);
 			if (statusCode == 200 || statusCode == 201 || statusCode == 204) {
 				final BufferedReader br = new BufferedReader(
 						new InputStreamReader(c.getInputStream()));

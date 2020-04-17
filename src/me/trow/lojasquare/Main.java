@@ -23,7 +23,7 @@ public class Main extends JavaPlugin{
 	private static List<String> produtosConfigurados = new ArrayList<>();
 	private static LojaSquare ls;
 	private static String servidor;
-	private static boolean debug;
+	private static boolean debug,smartDelivery;
 	
 	public void onEnable() {
 		ConsoleCommandSender b = Bukkit.getConsoleSender();
@@ -32,11 +32,10 @@ public class Main extends JavaPlugin{
 			pl=this;
 			saveDefaultConfig();
 			String keyapi = getKeyAPI();
-			ls = new LojaSquare();
-			if(!checarIPCorreto(b, keyapi)) return;
 			debug = getConfig().getBoolean("LojaSquare.Debug",true);
 			servidor = getConfig().getString("LojaSquare.Servidor",null);
 			if(!checarServidorConfigurado(b)) return;
+			smartDelivery = getConfig().getBoolean("LojaSquare.Smart_Delivery",true);
 			b.sendMessage("§3[LojaSquare] §bAtivado...");
 			b.sendMessage("§3Criador: §bTrow");
 			b.sendMessage("§bDesejo a voce uma otima experiencia com o §dLojaSquare§b.");
@@ -51,11 +50,13 @@ public class Main extends JavaPlugin{
 			tempoChecarItens = getConfig().getInt("Config.Tempo_Checar_Compras",60);
 			// INICIO definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bDefinindo variaveis de conexao com o site §dLojaSquare§b...");
+			ls = new LojaSquare();
 			ls.setCredencial(keyapi);
 			ls.setConnectionTimeout(getConfig().getInt("LojaSquare.Connection_Timeout",1500));
 			ls.setReadTimeout(getConfig().getInt("LojaSquare.Read_Timeout",3000));
 			ls.setDebug(debug);
 			b.sendMessage("§3[LojaSquare] §bVariaveis definidas com sucesso!");
+			if(!checarIPCorreto(b, keyapi)) return;
 			// FIM definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
 			Bukkit.getPluginManager().registerEvents(new ProdutoListener(), this);
@@ -86,6 +87,7 @@ public class Main extends JavaPlugin{
 			b.sendMessage("§3Criador: §3Trow");
 			b.sendMessage("§cMotivo: " + result);
 			b.sendMessage("§3Key-API: §a"+nome);
+			b.sendMessage("§3Para atualizar o IP, acesse: https://painel.lojasquare.com.br/config/plugin");
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return false;
@@ -115,7 +117,7 @@ public class Main extends JavaPlugin{
 				if(itens!=null&&itens.size()>0){
 					for(final ItemInfo item:itens){
 						printDebug("§3[LojaSquare] §bItem: §a"+item.toString()+" §b// subServer: §a"+item.getSubServidor()+" // Servidor: §d"+servidor);
-						if(!item.getSubServidor().equalsIgnoreCase(servidor)) continue;
+						if(!item.getSubServidor().equalsIgnoreCase(servidor)||item.getStatusID()==2) continue;
 						final Player p = Bukkit.getPlayer(item.getPlayer());
 						printDebug("§3[LojaSquare] §bPlayer: §a"+item.getPlayer()+"§b // P NULL? §a"+(p==null));
 						if(p==null&&!getConfig().getBoolean("Grupos."+item.getGrupo()+".Ativar_Com_Player_Offline",false)){
@@ -170,6 +172,10 @@ public class Main extends JavaPlugin{
 	public int getTempoChecarItens(){
 		if(tempoChecarItens<=0) return 60;
 		return tempoChecarItens;
+	}
+	
+	public boolean doSmartDelivery(){
+		return smartDelivery;
 	}
 	
 	public LojaSquare getLojaSquare(){

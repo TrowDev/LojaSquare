@@ -1,5 +1,15 @@
 LojaSquare:
   Debug: true
+  # A opcao Smart_Delivery funciona da seguinte forma:
+  # Se o Smart_Delivery estiver marcado como true, e um player comprar 10 Vips no site. Ao inves de o plugin executar 10x o 
+  # comando que voce colocou, sera executado apenas 1x com a quantidade 10 embutida no placeholder @qnt
+  # (@qnt fica la nos comandos dos grupos, ali em baixo).
+  # Ou seja, o plugin sera inteligente e executara menos comandos, realizando a entrega e trazendo um melhor desempenho.
+  # Se o Smart_Delivery estiver marcado como false, o plugin ira executar 10x o comando que voce colocou 
+  # (ou a quantidade de vezes que o player comprou). Entao se voce tiver pacote de cash e o player comprar 500 pacotes de cash, o
+  # plugin ira executar 500x os comandos de entrega do cash.
+  # Ai vai depender de como voce prefere a entrega. Recomendamos deixar true.
+  Smart_Delivery: true
   # Para saber o que deve ser inserido em Key_API e em Servidor, acesse este tutorial:
   # https://painel.lojasquare.com.br/faq/ver?id=9
   # (E necessario fazer login para ver o tutorial)
@@ -61,6 +71,8 @@ Grupos:
     Cmds_A_Executar:
       # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
       # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
+      # Recomendamos que use o TGVIP e NAO utilize o comando /darvip.
+      # Explicacao na FAQ: https://painel.lojasquare.com.br/faq/ver?id=18
       - 'gerarvip @grupo @dias @qnt @player'
   #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
   Cash10:

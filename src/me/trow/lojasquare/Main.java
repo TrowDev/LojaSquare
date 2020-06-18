@@ -56,7 +56,7 @@ public class Main extends JavaPlugin{
 			ls.setReadTimeout(getConfig().getInt("LojaSquare.Read_Timeout",3000));
 			ls.setDebug(debug);
 			b.sendMessage("§3[LojaSquare] §bVariaveis definidas com sucesso!");
-			if(!checarIPCorreto(b, keyapi)) return;
+			checarIPCorreto(b, keyapi);
 			// FIM definindo variaveis do LojaSquare
 			b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
 			Bukkit.getPluginManager().registerEvents(new ProdutoListener(), this);
@@ -79,21 +79,25 @@ public class Main extends JavaPlugin{
 		b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 	}
 	
-	public boolean checarIPCorreto(ConsoleCommandSender b,String nome){
-		String result = getLojaSquare().get("/v1/autenticar");
-		boolean bo = result.contains("true");
-		if (!bo) {
-			b.sendMessage("§3[LojaSquare] §cDesativado...");
-			b.sendMessage("§3Criador: §3Trow");
-			b.sendMessage("§cMotivo: " + result);
-			b.sendMessage("§3Key-API: §a"+nome);
-			b.sendMessage("§3Para atualizar o IP, acesse: https://painel.lojasquare.com.br/config/plugin");
-			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return false;
-		}
-		b.sendMessage("§3[LojaSquare] §bIP da maquina configurado!");
-		return true;
+	public void checarIPCorreto(final ConsoleCommandSender b,final String nome){
+		new BukkitRunnable() {
+			public void run() {
+				String result = getLojaSquare().get("/v1/autenticar");
+				boolean bo = result.contains("true");
+				if (!bo) {
+					b.sendMessage("§3[LojaSquare] §cDesativado...");
+					b.sendMessage("§3Criador: §3Trow");
+					b.sendMessage("§cMotivo: " + result);
+					b.sendMessage("§3Key-API: §a"+nome);
+					b.sendMessage("§ePara atualizar o IP, acesse: §ahttps://painel.lojasquare.com.br/config/plugin");
+					b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+					Bukkit.getPluginManager().disablePlugin(pl);
+					return;
+				}
+				b.sendMessage("§3[LojaSquare] §bIP da maquina configurado!");
+			}
+		}.runTaskAsynchronously(pl);
+		return;
 	}
 	
 	public boolean checarServidorConfigurado(ConsoleCommandSender b){
@@ -141,6 +145,10 @@ public class Main extends JavaPlugin{
 				}
 			}
 		}.runTaskTimerAsynchronously(pl, 20*10, 20*getTempoChecarItens());
+	}
+	
+	public boolean canDebug(){
+		return debug;
 	}
 	
 	public static void printDebug(String s){

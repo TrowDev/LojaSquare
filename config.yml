@@ -1,4 +1,21 @@
+#######################################################################################
+#                                                                                     #
+# ██╗      ██████╗      ██╗ █████╗ ███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ███████╗ #
+# ██║     ██╔═══██╗     ██║██╔══██╗██╔════╝██╔═══██╗██║   ██║██╔══██╗██╔══██╗██╔════╝ #
+# ██║     ██║   ██║     ██║███████║███████╗██║   ██║██║   ██║███████║██████╔╝█████╗   #
+# ██║     ██║   ██║██   ██║██╔══██║╚════██║██║▄▄ ██║██║   ██║██╔══██║██╔══██╗██╔══╝   #
+# ███████╗╚██████╔╝╚█████╔╝██║  ██║███████║╚██████╔╝╚██████╔╝██║  ██║██║  ██║███████╗ #
+# ╚══════╝ ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝ #
+#                                                                                     #
+#######################################################################################
+#
+# No final do arquivo tem alguns exemplos de erros e a solução para eles.
+# Além de um pequeno FAQ.
+#
 LojaSquare:
+  # Essa opção irá imprimir uma mensagem de status para quem é op.
+  # Exemplo da impressão: https://prnt.sc/smvuew
+  # Caso queira que isso não apareça, marque Debug como false.
   Debug: true
   # A opcao Smart_Delivery funciona da seguinte forma:
   # Se o Smart_Delivery estiver marcado como true, e um player comprar 10 Vips no site. Ao inves de o plugin executar 10x o 
@@ -10,93 +27,150 @@ LojaSquare:
   # plugin ira executar 500x os comandos de entrega do cash.
   # Ai vai depender de como voce prefere a entrega. Recomendamos deixar true.
   Smart_Delivery: true
-  # Para saber o que deve ser inserido em Key_API e em Servidor, acesse este tutorial:
-  # https://painel.lojasquare.com.br/faq/ver?id=9
-  # (E necessario fazer login para ver o tutorial)
-  Key_API: "lojasquare-key-api"
+  #
+  # Pegue sua Key API aqui: https://painel.lojasquare.com.br/conta/criarkey
+  #
+  Key_API: "Key-API-Aqui"
+  # Nome do servidor cadastrado aqui: https://painel.lojasquare.com.br/servidores
   Servidor: "Nome-Do-Servidor"
+  # Tempo que o plugin tentará se conectar com o site.
   Connection_Timeout: 1500
   Read_Timeout: 3000
 
 Config:
   HTTPS: true
-  # A cada X segundos sera checado no site se tem algum item para ser entregue. (Para nao precisar do player relogar)
+  #
+  # Esse é o tempo, em segundos, que o plugin levará para fazer uma nova checagem.
+  # Não recomendamos deixar maior do que 5 minutos (300 segundos).
+  # Essa checagem sempre retornará uma resposta que será exibida no Console.
+  # A resposta será:
+  # Status Code From /v1/queue/* : {valor}
+  # Os valores mais comuns são 404 e 200
+  # 
+  # 404 significa que não tem nenhum produto para ser entregue.
+  # 200 significa que tem algum produto para ser entregue.
+  #
   Tempo_Checar_Compras: 60
 
+#
+# VARIÁVEIS
+#
+# @player = Player que comprou
+# @qnt    = quantidade que foi adquirida pelo player
+# @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
+# @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
+#
+
 Grupos:
-  # Com relacao a configuracao de DISPUTA e RESOLVIDO, veja o tutorial: https://painel.lojasquare.com.br/faq/ver?id=10
-  #Nao mude o nome deste grupo. Se o player abrir uma disputa com voce, o LojaSquare usara este grupo para aplicar uma punicao.
+  #
+  # Não mexa no grupo de DISPUTA e RESOLVIDO
+  # Caso contrário, o jogador que pedir reembolso
+  # não será punido.
+  #
   DISPUTA:
-    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
-    # @player = Player que comprou
-    # @qnt    = quantidade que foi adquirida pelo player
-    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
-    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
-    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    # Se este grupo de item NÃO DER money/cash para o player, deixe marcado como false.
     Money: false
     Cmds_A_Executar:
-      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
-      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
-      - 'ban @player &cEncerre o pedido de disputa e voce sera desbanido!'
-  #Nao mude o nome deste grupo. Se o player encerrar a disputa a seu favor, o LojaSquare usara este grupo para remover a punicao.
+      - 'ban @player &cEncerre o pedido de disputa e você será desbanido!'
+  #
   RESOLVIDO:
-    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
-    # @player = Player que comprou
-    # @qnt    = quantidade que foi adquirida pelo player
-    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
-    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
-    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+    # Se este grupo de item NÃO DER money/cash para o player, deixe marcado como false.
     Money: false
     Cmds_A_Executar:
-      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
-      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
+      - 'unban @player'
       - 'desban @player'
-  # Para configurar os outros produtos, veja o tutorial: https://painel.lojasquare.com.br/faq/ver?id=15
-  #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
-  VIPFerro:
-    #O comando abaixo e o comando do TGVIP. As variaveis do LojaSquare sao:
-    # @player = Player que comprou
-    # @qnt    = quantidade que foi adquirida pelo player
-    # @grupo  = Grupo que voce configurou para o pacote no seu painel. Neste caso, VIPFerro
-    # @dias   = Quantidade de dias que voce configurou para o pacote no seu painel.
-    # Se este grupo de item NAO DER money para o player, deixe marcado como false.
+      - 'pardon @player'
+  #
+  # Aqui começa a configuração de seus produtos
+  #
+  # Exemplo de VIP logo abaixo
+  #
+  # Nome do Grupo do produto criado no painel da Loja Square.
+  # Veja o nome do Grupo aqui: https://painel.lojasquare.com.br/pacotes/lista
+  VIP1:
+    # Recomendado deixar como false.
+    # Caso esse grupo seja de unban, deixe como true
     Ativar_Com_Player_Offline: false
+    # Caso você queira que seja enviado uma mensagem para o player
+    # quando o produto for ativado, deixe como true.
     Enviar_Mensagem: false
     Mensagem_Receber_Ao_Ativar_Produto:
       - '&eOla, &a@player'
       - '&eO produto que voce adquiriu (&a@produto) foi ativado!'
       - '&eDias: &a@dias'
       - '&eQuantidade: &a@qnt'
+    # Se este grupo de item NÃO DER money/cash para o player, deixe marcado como false.
     Money: false
     Cmds_A_Executar:
-      # Neste exemplo o console executara o comando para gerar um vip para o player, do grupo VIPFerro, com 30 dias de duracao
-      # e a key VIP podera ser usada de acordo com a @qnt que o player tiver compro no site.
-      # Recomendamos que use o TGVIP e NAO utilize o comando /darvip.
-      # Explicacao na FAQ: https://painel.lojasquare.com.br/faq/ver?id=18
+      # Comandos que serão executados ao ativar esse produto. (Sem "/")
       - 'gerarvip @grupo @dias @qnt @player'
-  #Nome do Grupo do produto que voce criou no seu painel do LojaSquare.
+  #
+  # Exemplo de Money/Cash logo abaixo
+  #
+  # Nome do Grupo do produto criado no painel da Loja Square.
+  # Veja o nome do Grupo aqui: https://painel.lojasquare.com.br/pacotes/lista
   Cash10:
-    # Quando o produto for entregue devera mandar uma mensagem ao player que o recebeu?!
+    # Recomendado deixar como false.
+    # Caso esse grupo seja de unban, deixe como true
+    Ativar_Com_Player_Offline: false
+    # Caso você queira que seja enviado uma mensagem para o player
+    # quando o produto for ativado, deixe como true.
     Enviar_Mensagem: false
-    # Mensagem que o player que recebeu o produto ira receber tambem.
     Mensagem_Receber_Ao_Ativar_Produto:
       - '&eOla, &a@player'
       - '&eO produto que voce adquiriu (&a@produto) foi ativado!'
       - '&eDias: &a@dias'
       - '&eQuantidade: &a@qnt'
+    # Se este grupo de item der money/cash para o player, deixe marcado como true.
+    Money: true
     # Se a quantidade de produtos que o player tiver compro for igual a 1, ele ira ganhar 10 cash.
     # Se a quantidade de produtos que o player tiver compro for igual a 4, ele ira ganhar 10x5 cash = 50 cash
     Quantidade_De_Money: 10
-    Ativar_Com_Player_Offline: false
-    # Se este grupo de item DER Money para o player (CASH/almas tambem sao tipos de money money), deixe como true
-    Money: true
     Cmds_A_Executar:
-      # Neste exemplo o console executara o comando para dar a quantidade de money adquirida ao player.
-      # Se o player tiver adquirido 2 quantidades do grupo Cash10, ele recebera 10x2 = 20 cashs.
-      # Ou seja, a variavel @money sera igual a 20.00
-      # Se voce usar algum plugin que nao aceita valores quebrados (Exemplo: 1.05), utilize esta variavel: @moneyInteiro
-      # Ao utilizar @moneyInteiro, voce deixara de receber como valor 20.00 e recebera 20 apenas.
-      - 'money give @player @money'
+      #
+      # Comandos que serão executados ao ativar esse produto. (Sem "/")
+      # 
+      # A variável @money receberá a Quantidade_De_Money, nesse caso 10
+      # e multiplicará com a quantidade de produtos adquiridos pelo player.
+      # Se o player adquirir 1 quantidade, @money receberá 10.00x1 = 10.00
+      # Se o player adquirir 2 quantidades, @money receberá 10.00x2 = 20.00
+      # 
+      # Observação: A variável @money trabalha com decimais, por isso o *.00.
+      # Caso o seu plugin não aceite decimais, você pode utilizar @moneyInteiro
+      # Assim ele deixa de ser 10.00 e passa a ser somente 10.
+      #
+      - 'cash give @player @money'
 
 Msg:
-  Produto_Nao_Configurado: "&4[LojaSquare] &cVoce tem um produto para ser entregue, porem, o grupo do produto nao esta configurado. Grupo: &a@grupo"
+  # Essa mensagem será exibida ao player quando ele tiver um produto não configurado para ser entregue.
+  Produto_Nao_Configurado: "&4[LojaSquare] &cVocê tem um produto para ser entregue, porém o grupo do produto nao está configurado. Grupo: &a@grupo"
+
+#
+# Erros
+#
+  # Caso você encontre este erro em seu Console:
+  # [LojaSquare] Erro ao tentar conexao com o site. Erro: Read timed out
+  # Aumente os valores de Connection_Timeout e Read_Timeout.
+#
+#
+  # Caso você encontre este erro em seu Console:
+  # [LojaSquare] Erro ao tentar conexao com o site. Erro: api.lojasquare.com.br
+  # Gere uma nova Key-API aqui: https://painel.lojasquare.com.br/conta/criarkey
+  # E troque a Key-API deste arquivo para a nova.
+#
+# FAQ
+#
+  # O nome do Grupo precisa ser idêntico ao do TGVIP/VipZero e PermissionsEx/LuckPerms?
+  # Resposta: Não, o nome pode ser diferente, porém você não poderá utilizar a variável @grupo.
+  # Mas no seu TGVIP/VipZero deverá ser idêntico ao do PermissionsEx/LuckPerms.
+#
+#
+  # Posso colocar formatação no Quantidade_De_Money?
+  # Resposta: Não, caso você venda 10k de Cash, precisará colocar 10000 no Quantidade_De_Money.
+#
+#
+  # https://painel.lojasquare.com.br/faq/ver?id=9
+  # https://painel.lojasquare.com.br/faq/ver?id=10
+  # https://painel.lojasquare.com.br/faq/ver?id=15
+  # https://painel.lojasquare.com.br/faq/ver?id=18
+#

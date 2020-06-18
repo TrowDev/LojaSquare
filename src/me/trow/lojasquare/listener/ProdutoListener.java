@@ -62,6 +62,9 @@ public class ProdutoListener implements Listener{
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 				} catch (Exception e2) {
 					pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
+					if(pl.canDebug()){
+						e2.printStackTrace();
+					}
 					// TODO: handle exception
 				}
 			}
@@ -95,6 +98,9 @@ public class ProdutoListener implements Listener{
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 					} catch (Exception e2) {
 						pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
+						if(pl.canDebug()){
+							e2.printStackTrace();
+						}
 						// TODO: handle exception
 					}
 				}

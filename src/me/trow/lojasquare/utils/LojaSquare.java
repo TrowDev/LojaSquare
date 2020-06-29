@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 
 public class LojaSquare {
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		LojaSquare ls = new LojaSquare();
 		ls.setCredencial("Lo1nvWtvhaQmOZvhsYPDeQQKE8SKQ2");
 		for(int i=0; i < 1000; i++){
@@ -98,6 +98,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
 			String result = get(String.format("/v1/queue/%s", player));
+			if(result == null) return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
 			for(int i=1;i<=job.entrySet().size();i++){
 				try{
@@ -122,6 +123,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
 			String result = get(String.format("/v1/queue/%s", player));
+			if(result == null) return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
 			for(int i=1;i<=job.entrySet().size();i++){
 				try{
@@ -160,7 +162,7 @@ public class LojaSquare {
 			c.setReadTimeout(getReadTimeout());
 			c.connect();
 			statusCode = c.getResponseCode();
-			print("Status Code From "+endpoint+" : "+statusCode);
+//			print("Status Code From "+endpoint+" : "+statusCode);
 			if (statusCode == 200 || statusCode == 201 || statusCode == 204) {
 				final BufferedReader br = new BufferedReader(
 						new InputStreamReader(c.getInputStream()));
@@ -205,7 +207,9 @@ public class LojaSquare {
 				}
 			}
 		}
-		return getResponseByCode(statusCode);
+		String response = getResponseByCode(statusCode);
+		print(response);
+		return null;
 	}
 
 	/**

@@ -98,7 +98,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
 			String result = get(String.format("/v1/queue/%s", player));
-			if(result == null) return itens;
+			if(result.startsWith("LS-")) return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
 			for(int i=1;i<=job.entrySet().size();i++){
 				try{
@@ -123,7 +123,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
 			String result = get(String.format("/v1/queue/%s", player));
-			if(result == null) return itens;
+			if(result.startsWith("LS-")) return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
 			for(int i=1;i<=job.entrySet().size();i++){
 				try{
@@ -207,9 +207,7 @@ public class LojaSquare {
 				}
 			}
 		}
-		String response = getResponseByCode(statusCode);
-		print(response);
-		return null;
+		return "LS-"+getResponseByCode(statusCode);
 	}
 
 	/**

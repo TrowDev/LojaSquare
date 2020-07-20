@@ -83,8 +83,7 @@ public class Main extends JavaPlugin{
 		new BukkitRunnable() {
 			public void run() {
 				String result = getLojaSquare().get("/v1/autenticar");
-				boolean bo = result.contains("true");
-				if (!bo) {
+				if ( result == null || !result.contains("true")) {
 					b.sendMessage("§3[LojaSquare] §cDesativado...");
 					b.sendMessage("§3Criador: §3Trow");
 					b.sendMessage("§cMotivo: " + result);

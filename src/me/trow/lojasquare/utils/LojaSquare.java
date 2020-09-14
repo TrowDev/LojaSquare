@@ -19,20 +19,18 @@ import com.google.gson.JsonParser;
 
 public class LojaSquare {
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		LojaSquare ls = new LojaSquare();
 		ls.setCredencial("Lo1nvWtvhaQmOZvhsYPDeQQKE8SKQ2");
-		for(int i=0; i < 1000; i++){
-			List<ItemInfo> li = ls.getTodasEntregas();//getEntregasPlayer("Trow_Games");
-			if(li.size()>0){
-				print("#"+i+" - "+li.size());
-//				for(ItemInfo ii:li){
-//					print(ii.toString());
-//					//ls.updateDelivery(ii);
-//				}
-			}else{
-				print("Nada para entregar ao player Trow_Games.");
-			}
+		List<ItemInfo> li = ls.getTodasEntregas();//getEntregasPlayer("Trow_Games");
+		if(li.size()>0){
+			print(li.get(0).toString());
+//			for(ItemInfo ii:li){
+//				print(ii.toString());
+//				//ls.updateDelivery(ii);
+//			}
+		}else{
+			print("Nada para entregar ao player Trow_Games.");
 		}
 	}// */
 	

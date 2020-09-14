@@ -38,6 +38,14 @@ public class ProdutoListener implements Listener{
 		}.runTaskAsynchronously(pl);
 	}
 	
+	public String replaceCommand(ItemInfo ii, String cmds, int qntMoneyInteiro, double qntMoney) {
+		cmds=cmds.replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"")
+				.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
+		cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
+		cmds=cmds.replace("@qnt", ii.getQuantidade()+"").replace("@cupom", ii.getCupom());
+		return cmds;
+	}
+	
 	@EventHandler
 	public void activeSmartDelivery(ProductActiveEvent e){
 		ItemInfo ii = e.getItemInfo();
@@ -55,10 +63,7 @@ public class ProdutoListener implements Listener{
 			int qntMoneyInteiro = (int)qntMoney;
 			for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
 				try {
-					cmds=cmds.replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"")
-							.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
-					cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
-					cmds=cmds.replace("@qnt", ii.getQuantidade()+"");
+					cmds = replaceCommand(ii, cmds, qntMoneyInteiro, qntMoneyInteiro);
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 				} catch (Exception e2) {
 					pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
@@ -91,10 +96,7 @@ public class ProdutoListener implements Listener{
 			for(int i=1;i<=ii.getQuantidade();i++){
 				for(String cmds:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Cmds_A_Executar")){
 					try {
-						cmds=cmds.replace("@moneyInteiro", (qntMoneyInteiro>0?qntMoneyInteiro:"")+"")
-								.replace("@money", (qntMoney>0?""+qntMoney:"")).replace("@grupo", ii.getGrupo());
-						cmds=cmds.replace("@dias", ii.getDias()+"").replace("@player", ii.getPlayer());
-						cmds=cmds.replace("@qnt", i+"");
+						cmds = replaceCommand(ii, cmds, qntMoneyInteiro, qntMoneyInteiro);
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
 					} catch (Exception e2) {
 						pl.print("§4[LojaSquare] §cErro ao executar o cmd §a"+cmds+"§c da entrega com ID: §a"+ii.getIDEntrega()+"§c e codigo de transacao: §a"+ii.getCodigo()+"§c. Erro: §a"+e2.getMessage());
@@ -118,7 +120,7 @@ public class ProdutoListener implements Listener{
 			for(String s:pl.getConfig().getStringList("Grupos."+ii.getGrupo()+".Mensagem_Receber_Ao_Ativar_Produto")){
 				s=s.replace("&", "§");
 				s=s.replace("@grupo", ii.getGrupo()).replace("@produto", ii.getProduto()).replace("@dias", ii.getDias()+"");
-				s=s.replace("@qnt", ii.getQuantidade()+"").replace("@player", p.getName());
+				s=s.replace("@qnt", ii.getQuantidade()+"").replace("@player", p.getName()).replace("@cupom", ii.getCupom());
 				p.sendMessage(s);
 			}
 		}

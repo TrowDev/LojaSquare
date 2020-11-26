@@ -58,9 +58,8 @@ public class Main extends JavaPlugin{
 			b.sendMessage("§3[LojaSquare] §bVariaveis definidas com sucesso!");
 			checarIPCorreto(b, keyapi);
 			// FIM definindo variaveis do LojaSquare
-			b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
 			Bukkit.getPluginManager().registerEvents(new ProdutoListener(), this);
-			checarEntregas();
+			checarEntregas(b);
 			b.sendMessage("§6=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
 		}catch (Exception e){
 			e.printStackTrace();
@@ -93,7 +92,10 @@ public class Main extends JavaPlugin{
 					Bukkit.getPluginManager().disablePlugin(pl);
 					return;
 				}
-				b.sendMessage("§3[LojaSquare] §bIP da maquina configurado!");
+				if(result.contains(",")) {
+					ls.setIpMaquina(result.split(",")[1]);
+				}
+				b.sendMessage("§3[LojaSquare] §bIP da maquina validado!");
 			}
 		}.runTaskAsynchronously(pl);
 		return;
@@ -111,7 +113,9 @@ public class Main extends JavaPlugin{
 		return true;
 	}
 	
-	public void checarEntregas(){
+	public void checarEntregas(ConsoleCommandSender b){
+		b.sendMessage("§3[LojaSquare] §bIniciando checagem automatica de entregas...");
+		b.sendMessage("§3[LojaSquare] §bTempo de checagem a cada §a"+getTempoChecarItens()+"§b segundos.");
 		new BukkitRunnable() {
 			public void run() {
 				List<ItemInfo> itens = getLojaSquare().getTodasEntregas();
@@ -123,10 +127,10 @@ public class Main extends JavaPlugin{
 						if(!item.getSubServidor().equalsIgnoreCase(servidor)||item.getStatusID()==2) continue;
 						final Player p = Bukkit.getPlayer(item.getPlayer());
 						printDebug("§3[LojaSquare] §bPlayer: §a"+item.getPlayer()+"§b // P NULL? §a"+(p==null));
-						if(p==null&&!getConfig().getBoolean("Grupos."+item.getGrupo()+".Ativar_Com_Player_Offline",false)){
-							boolean b = item.getProduto().equalsIgnoreCase("DISPUTA")&&item.getGrupo().equalsIgnoreCase("DISPUTA");
-							boolean b1 = item.getProduto().equalsIgnoreCase("RESOLVIDO")&&item.getGrupo().equalsIgnoreCase("RESOLVIDO");
-							if(!b&&!b1) continue;
+						if(p==null && !getConfig().getBoolean("Grupos."+item.getGrupo()+".Ativar_Com_Player_Offline",false)){
+							boolean disputa = item.getProduto().equalsIgnoreCase("DISPUTA") && item.getGrupo().equalsIgnoreCase("DISPUTA");
+							boolean resolvido = item.getProduto().equalsIgnoreCase("RESOLVIDO") && item.getGrupo().equalsIgnoreCase("RESOLVIDO");
+							if(!disputa && !resolvido) continue;
 						}
 						if(!produtoConfigurado(item.getGrupo())&&p!=null){
 							printDebug("§3[LojaSquare] §bProduto §a"+item.getGrupo()+"§b nao configurado!");
@@ -152,6 +156,7 @@ public class Main extends JavaPlugin{
 	
 	public static void printDebug(String s){
 		if(debug){
+			Bukkit.getConsoleSender().sendMessage(s);
 			for(Player p:getOnlinePlayers()){
 				if(p.isOp()||p.hasPermission("lojasquare.debug")){
 					p.sendMessage(s);

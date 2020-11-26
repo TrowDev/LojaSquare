@@ -37,6 +37,7 @@ public class LojaSquare {
 	private int connectionTimeout;
 	private int readTimeout;
 	private String credencial;
+	private String ipMaquina;
 	private boolean debug;
 	
 	public LojaSquare(){
@@ -96,6 +97,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try{
 			String result = get(String.format("/v1/queue/%s", player));
+			//print(result);
 			if(result.startsWith("LS-")) return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
 			for(int i=1;i<=job.entrySet().size();i++){
@@ -271,6 +273,7 @@ public class LojaSquare {
 		print(getResponseByCode(statusCode));
 		return false;
 	}
+
 	
 	public String getResponseByCode(int i){
 		if(i==0){
@@ -278,7 +281,7 @@ public class LojaSquare {
 		}else if(i==401){
 			return "[LojaSquare] §cConexao nao autorizada! Por favor, confira se a sua credencial esta correta.";
 		}else if(i==403){
-			return "[LojaSquare] §cO IP enviado e diferente do que temos em nosso Banco de Dados. IP da sua Maquina: §a"+get("/v1/autenticar/ip");
+			return "[LojaSquare] §cO IP enviado e diferente do que temos em nosso Banco de Dados. IP da sua Maquina: §a"+getIpMaquina();
 		}else if(i==404){
 			return "[LojaSquare] §cNao foi encontrado nenhum registro para a requisicao efetuada.";
 		}else if(i==405){
@@ -307,6 +310,23 @@ public class LojaSquare {
 	
 	public void msgConsole(String s){
 		Bukkit.getConsoleSender().sendMessage(s);
+	}
+
+	public String getIpMaquina() {
+		if(ipMaquina == null) {
+			String getIP = this.get("/v1/autenticar/ip");
+			// checagem criada para evitar erros de repetição como este: https://prnt.sc/vql2p3
+			if(getIP.length()>20) {
+				ipMaquina = "não identificado.";
+			} else {
+				ipMaquina = getIP;
+			}
+		}
+		return ipMaquina;
+	}
+
+	public void setIpMaquina(String ipMaquina) {
+		this.ipMaquina = ipMaquina;
 	}
 
 }

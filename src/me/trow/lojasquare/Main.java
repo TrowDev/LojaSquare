@@ -182,7 +182,7 @@ public class Main extends JavaPlugin{
 	}
 	
 	public int getTempoChecarItens(){
-		if(tempoChecarItens<=0) return 60;
+		if(tempoChecarItens<20) return 20;
 		return tempoChecarItens;
 	}
 	

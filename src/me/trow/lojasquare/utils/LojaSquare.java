@@ -19,14 +19,21 @@ import com.google.gson.JsonParser;
 
 public class LojaSquare {
 
-	/*
-	 * public static void main(String[] args) { LojaSquare ls = new LojaSquare();
-	 * ls.setCredencial("Lo1nvWtvhaQmOZvhsYPDeQQKE8SKQ2"); List<ItemInfo> li =
-	 * ls.getTodasEntregas();//getEntregasPlayer("Trow_Games"); if(li.size()>0){
-	 * print(li.get(0).toString()); for(ItemInfo ii:li){ print(ii.toString());
-	 * //ls.updateDelivery(ii); } }else{
-	 * print("Nada para entregar ao player Trow_Games."); } }//
-	 */
+	/*public static void main(String[] args) {
+		LojaSquare ls = new LojaSquare();
+		ls.setCredencial("Lo1nvWtvhaQmOZvhsYPDeQQKE8SKQ2");
+		List<ItemInfo> li = ls.getTodasEntregas();// getEntregasPlayer("Trow_Games"); if(li.size()>0){
+		if(li == null || li.size() == 0) {
+			print("OPA!");
+			return;
+		}
+		print(li.get(0).toString());
+		for (ItemInfo ii : li) {
+			print(ii.toString());
+			// ls.updateDelivery(ii); } }else{
+			print("Nada para entregar ao player Trow_Games.");
+		}
+	}//*/
 
 	private int connectionTimeout;
 	private int readTimeout;
@@ -96,7 +103,7 @@ public class LojaSquare {
 		List<ItemInfo> itens = new ArrayList<>();
 		try {
 			String result = get(String.format("/v1/queue/%s", player));
-			// print(result);
+			//print(result);
 			if (result.startsWith("LS-"))
 				return itens;
 			JsonObject job = new JsonParser().parse(result).getAsJsonObject();
@@ -155,7 +162,7 @@ public class LojaSquare {
 		int statusCode = 0;
 		try {
 			final StringBuilder sb2 = new StringBuilder();
-			final URL u = new URL(sb2.append("https://ws.lojasquare.com.br").append(endpoint).toString());
+			final URL u = new URL(sb2.append("https://api.lojasquare.com.br/").append(endpoint).toString());
 			c = (HttpsURLConnection) u.openConnection();
 			c.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0) lojasquare");
 			c.setRequestMethod("GET");
@@ -225,7 +232,7 @@ public class LojaSquare {
 		int statusCode = 0;
 		try {
 			final StringBuilder sb = new StringBuilder();
-			final URL u = new URL(sb.append("https://ws.lojasquare.com.br").append(endpoint).toString());
+			final URL u = new URL(sb.append("https://api.lojasquare.com.br/").append(endpoint).toString());
 			c = (HttpsURLConnection) u.openConnection();
 			c.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0) lojasquare");
 			c.setRequestMethod("PUT");
@@ -297,13 +304,15 @@ public class LojaSquare {
 			msg = "[LojaSquare] §cNao foi executada nenhuma atualizacao referente ao requerimento efetuado.";
 			break;
 		case 409:
-			msg = "[LojaSquare] §cO IP enviado e diferente do que temos em nosso Banco de Dados. IP da sua Maquina: §a" + getIpMaquina();
+			msg = "[LojaSquare] §cO IP enviado e diferente do que temos em nosso Banco de Dados. IP da sua Maquina: §a"
+					+ getIpMaquina();
 			break;
 		case 423:
 			msg = "[LojaSquare] §cO IP da maquina do seu servidor ou a sua key-api foram bloqueados.";
 			break;
 		default:
-			msg = "[LojaSquare] §cProvavel falha causada por entrada de dados incompativeis com o requerimento efetuado. Status Code: " + i;
+			msg = "[LojaSquare] §cProvavel falha causada por entrada de dados incompativeis com o requerimento efetuado. Status Code: "
+					+ i;
 			break;
 		}
 		return msg;

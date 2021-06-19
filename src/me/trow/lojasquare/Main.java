@@ -123,6 +123,7 @@ public class Main extends JavaPlugin{
 				printDebug("§3[LojaSquare] §bItens Size: §a"+itens.size());
 				if(itens!=null&&itens.size()>0){
 					for(final ItemInfo item:itens){
+						if(item == null) continue;
 						printDebug("§3[LojaSquare] §bItem: §a"+item.toString()+" §b// subServer: §a"+item.getSubServidor()+" // Servidor: §d"+servidor);
 						if(!item.getSubServidor().equalsIgnoreCase(servidor)||item.getStatusID()==2) continue;
 						final Player p = Bukkit.getPlayer(item.getPlayer());

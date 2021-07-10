@@ -19,9 +19,10 @@ import com.google.gson.JsonParser;
 
 public class LojaSquare {
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		LojaSquare ls = new LojaSquare();
 		ls.setCredencial("Lo1nvWtvhaQmOZvhsYPDeQQKE8SKQ2");
+		ls.setDebug(true);
 		List<ItemInfo> li = ls.getTodasEntregas();// getEntregasPlayer("Trow_Games"); if(li.size()>0){
 		if(li == null || li.size() == 0) {
 			print("OPA!");
@@ -218,6 +219,7 @@ public class LojaSquare {
 				}
 			}
 		}
+		System.out.println(statusCode);
 		return "LS-" + getResponseByCode(statusCode);
 	}
 

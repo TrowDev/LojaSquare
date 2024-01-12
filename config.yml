@@ -91,6 +91,8 @@ Grupos:
     # Recomendado deixar como false.
     # Caso esse grupo seja de unban, deixe como true
     Ativar_Com_Player_Offline: false
+    # Apenas entregar o vip para o player se o inventario estiver vazio
+    Entregar_Apenas_Com_Inventario_Vazio: false
     # Caso você queira que seja enviado uma mensagem para o player
     # quando o produto for ativado, deixe como true.
     Enviar_Mensagem: false
@@ -144,6 +146,7 @@ Grupos:
 Msg:
   # Essa mensagem será exibida ao player quando ele tiver um produto não configurado para ser entregue.
   Produto_Nao_Configurado: "&4[LojaSquare] &cVocê tem um produto para ser entregue, porém o grupo do produto nao está configurado. Grupo: &a@grupo"
+  Limpe_Seu_Inventario: "&4[LojaSquare] &cLimpe seu inventario para receber o produto do grupo &a@grupo"
 
 #
 # Erros

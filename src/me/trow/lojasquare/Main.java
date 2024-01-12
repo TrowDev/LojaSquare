@@ -11,8 +11,10 @@ import me.trow.lojasquare.utils.ItemInfo;
 import me.trow.lojasquare.utils.LojaSquare;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -138,6 +140,12 @@ public class Main extends JavaPlugin{
 							p.sendMessage(getMsg("Msg.Produto_Nao_Configurado").replace("@grupo", item.getGrupo()));
 							continue;
 						}
+						if(p != null && getConfig().getBoolean("Grupo."+item.getGrupo()+".Entregar_Apenas_Com_Inventario_Vazio",false)) {
+							if(!isInventoryEmpty(p)) {
+								p.sendMessage(getMsg("Msg.Limpe_Seu_Inventario".replace("@grupo", item.getGrupo())));
+								continue;
+							}
+						}
 						new BukkitRunnable() {
 							public void run() {
 								printDebug("§3[LojaSquare] §bPre Product Active Event");
@@ -217,6 +225,18 @@ public class Main extends JavaPlugin{
 	
 	public static Main getInstance(){
 		return pl;
+	}
+	
+	public static boolean isInventoryEmpty(Player p){
+		for(ItemStack item : p.getInventory().getContents()){
+			if(item != null && item.getType()!=Material.AIR)
+				return false;
+		}
+		for(ItemStack item : p.getInventory().getArmorContents()){
+			if(item != null && item.getType()!=Material.AIR)
+				return false;
+		}
+		return true;
 	}
 	
 }
